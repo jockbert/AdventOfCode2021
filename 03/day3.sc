@@ -1,7 +1,6 @@
 case class Sum(ones: List[Int] = Nil) {
 
   def add(line: String): Sum = {
-
     val bits = line.toSeq.map(c => if c == '1' then 1 else -1)
 
     val newOnes = ones
@@ -22,11 +21,8 @@ case class Sum(ones: List[Int] = Nil) {
 }
 
 @main def main(filePath: String, part: Int) = {
-  val isPart2 = part.equals(2)
-  println(s"AOC day 3 part ${if isPart2 then 2 else 1}, with file '$filePath'")
+  println(s"Day 3 (Binary Diagnostics) part $part using file '$filePath'")
   val textLines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toList
-
   val s: Sum = textLines.foldLeft(Sum())((sum, line) => sum.add(line))
-
   println(s.gamma() * s.epsilon())
 }

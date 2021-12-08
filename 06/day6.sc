@@ -14,21 +14,16 @@ case class Population(
   def advance = Population(t1, t2, t3, t4, t5, t6, t7 + t0, t8, t0)
   def count = t0 + t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8
 
-  @tailrec
-  final def simulate(days: Int): Population = {
-    if (days <= 0) this
-    else advance.simulate(days - 1)
-  }
+  @tailrec final def simulate(days: Int): Population =
+    if (days <= 0) this else advance.simulate(days - 1)
 }
 
 @main def main(filePath: String, part: Int) = {
-  val isPart2 = part.equals(2)
-  println(s"AOC day 6 part $part, with file '$filePath'")
+  println(s"AOC day 6 (Lanternfish) part $part using file '$filePath'")
   val textLines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toList
-
   val individuals: List[Int] = textLines.head.split(",").map(_.toInt).toList
-
   val countPerTimer = individuals.groupMapReduce(n => n)(_ => 1)(_ + _)
+
   val initPop = Population(
     countPerTimer.getOrElse(0, 0),
     countPerTimer.getOrElse(1, 0),
@@ -41,6 +36,7 @@ case class Population(
     countPerTimer.getOrElse(8, 0)
   )
 
-  var finalPop = initPop.simulate(if isPart2 then 256 else 80)
+  var finalPop = initPop.simulate(if part == 2 then 256 else 80)
+
   println(finalPop.count)
 }

@@ -6,20 +6,15 @@ case class Board(rows: List[List[Int]]) {
     rows.exists(_.forall(drawnNumbers.contains)) ||
       rows.transpose.exists(_.forall(drawnNumbers.contains))
 
-  def score(drawnNumbers: Seq[Int]): Int = {
+  def score(drawnNumbers: Seq[Int]): Int =
     val lastDrawn = drawnNumbers.head
-
     val sumOfAllUnmarked = rows.flatten
       .filterNot(drawnNumbers.contains)
       .sum
-
     lastDrawn * sumOfAllUnmarked
-  }
-
 }
 
-@tailrec
-def findWinningBoard(
+@tailrec def findWinningBoard(
     drawn: List[Int],
     notYetDrawn: List[Int],
     boards: List[Board]
@@ -33,19 +28,12 @@ def findWinningBoard(
   }
 }
 
-@tailrec
-def findLoosingBoard(
+@tailrec def findLoosingBoard(
     drawn: List[Int],
     notYetDrawn: List[Int],
     boards: List[Board]
 ): Option[(Board, List[Int])] = {
   val winner = findWinningBoard(drawn, notYetDrawn, boards)
-
-  println("board count " + boards.size)
-  println("draw        " + drawn)
-  println("notYetDrawn " + notYetDrawn)
-  println("winner      " + winner)
-  println()
 
   (boards, winner) match {
     // last board left
@@ -61,38 +49,24 @@ def findLoosingBoard(
 }
 
 @main def main(filePath: String, part: Int) = {
-  val isPart2 = part.equals(2)
-  println(s"AOC day 4 part $part, with file '$filePath'")
+  println(s"Day 4 (Giant Squid) part $part using file '$filePath'")
   val textLines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toList
-
   val allDrawnNumbers = textLines.head.trim.split(",").toList.map(_.toInt)
-
   val boardLines = textLines.tail.tail.map(_.trim)
+
   val boards = boardLines
     .filterNot(_.isBlank)
-    .map(line =>
-      line
-        .split(" ")
-        .map(_.trim)
-        .filterNot(_.isEmpty)
-        .map(_.toInt)
-        .toList
-    )
+    .map(_.split(" ").map(_.trim).filterNot(_.isEmpty).map(_.toInt).toList)
     .grouped(5)
     .map(Board.apply)
     .toList
 
   val searchedBoard =
-    if isPart2 then findLoosingBoard(Nil, allDrawnNumbers, boards)
+    if part == 2 then findLoosingBoard(Nil, allDrawnNumbers, boards)
     else findWinningBoard(Nil, allDrawnNumbers, boards)
 
   searchedBoard match {
-    case Some(winnerBoard, winnerDraw) => {
-
-      println("board: " + winnerBoard)
-      println("draw:  " + winnerDraw)
-      println("score: " + winnerBoard.score(winnerDraw))
-    }
-    case _ => println("no board winner found")
+    case Some(winnerBoard, winnerDraw) => println(winnerBoard.score(winnerDraw))
+    case _                             => println("no board winner found")
   }
 }
