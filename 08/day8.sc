@@ -42,8 +42,8 @@ case class Entry(keys: List[Pattern], outputs: List[Pattern]) {
     Entry(keys.map(_.sorted), outputs.map(_.sorted))
 }
 
-@main def main(filePath: String, part: Int) = {
-  println(s"Day 8 (Seven Segment Search) part $part using file '$filePath'")
+@main def main(filePath: String) = {
+  println(s"Day 8 (Seven Segment Search) using file '$filePath'")
   val textLines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toList
 
   val allEntries: List[Entry] = textLines
@@ -51,12 +51,11 @@ case class Entry(keys: List[Pattern], outputs: List[Pattern]) {
     .map(arr => Entry(arr(0).split(" ").toList, arr(1).split(" ").toList))
     .map(_.normalizePatterns())
 
-  if part == 2 then println(allEntries.map(_.calcOutputNumber()).sum)
-  else
-    val allLengths = allEntries.flatMap(_.outputs.map(_.size))
-    val ones = allLengths.count(_ == 2)
-    val sevens = allLengths.count(_ == 3)
-    val fours = allLengths.count(_ == 4)
-    val eights = allLengths.count(_ == 7)
-    println(ones + sevens + fours + eights)
+  val allLengths = allEntries.flatMap(_.outputs.map(_.size))
+  val ones = allLengths.count(_ == 2)
+  val sevens = allLengths.count(_ == 3)
+  val fours = allLengths.count(_ == 4)
+  val eights = allLengths.count(_ == 7)
+  println("part 1: " + (ones + sevens + fours + eights))
+  println("part 2: " + allEntries.map(_.calcOutputNumber()).sum)
 }

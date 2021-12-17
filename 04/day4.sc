@@ -48,8 +48,13 @@ case class Board(rows: List[List[Int]]) {
   }
 }
 
-@main def main(filePath: String, part: Int) = {
-  println(s"Day 4 (Giant Squid) part $part using file '$filePath'")
+def asText(b: Option[(Board, List[Int])]) = b match {
+  case Some(winnerBoard, winnerDraw) => winnerBoard.score(winnerDraw)
+  case _                             => "no board winner found"
+}
+
+@main def main(filePath: String) = {
+  println(s"Day 4 (Giant Squid) using file '$filePath'")
   val textLines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toList
   val allDrawnNumbers = textLines.head.trim.split(",").toList.map(_.toInt)
   val boardLines = textLines.tail.tail.map(_.trim)
@@ -61,12 +66,6 @@ case class Board(rows: List[List[Int]]) {
     .map(Board.apply)
     .toList
 
-  val searchedBoard =
-    if part == 2 then findLoosingBoard(Nil, allDrawnNumbers, boards)
-    else findWinningBoard(Nil, allDrawnNumbers, boards)
-
-  searchedBoard match {
-    case Some(winnerBoard, winnerDraw) => println(winnerBoard.score(winnerDraw))
-    case _                             => println("no board winner found")
-  }
+  println("part 1: " + asText(findWinningBoard(Nil, allDrawnNumbers, boards)))
+  println("part 2: " + asText(findLoosingBoard(Nil, allDrawnNumbers, boards)))
 }

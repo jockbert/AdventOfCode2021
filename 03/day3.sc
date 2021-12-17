@@ -20,9 +20,9 @@ case class Sum(ones: List[Int] = Nil) {
     .foldLeft(0)((acc, bit) => (acc << 1) + bit)
 }
 
-@main def main(filePath: String, part: Int) = {
-  println(s"Day 3 (Binary Diagnostics) part $part using file '$filePath'")
+@main def main(filePath: String) = {
+  println(s"Day 3 (Binary Diagnostics) using file '$filePath'")
   val textLines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toList
   val s: Sum = textLines.foldLeft(Sum())((sum, line) => sum.add(line))
-  println(s.gamma() * s.epsilon())
+  println("part 1: " + s.gamma() * s.epsilon())
 }

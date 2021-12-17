@@ -47,13 +47,12 @@ def findParseError(line: String): ParseError = {
   parse(line.toList)
 }
 
-@main def main(filePath: String, part: Int) = {
-  println(s"Day 10 (Syntax Scoring) part $part using file '$filePath'")
+@main def main(filePath: String) = {
+  println(s"Day 10 (Syntax Scoring) using file '$filePath'")
   val textLines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toList
   val parseErrors = textLines.map(findParseError)
+  println("part 1: " + parseErrors.filter(_.isCorrupt).map(_.score).sum)
 
-  if part == 2 then
-    val scores = parseErrors.filter(_.isIncomplete).map(_.score).sorted
-    println(scores.drop(scores.size / 2).head)
-  else println(parseErrors.filter(_.isCorrupt).map(_.score).sum)
+  val scores = parseErrors.filter(_.isIncomplete).map(_.score).sorted
+  println("part 2: " + scores.drop(scores.size / 2).head)
 }

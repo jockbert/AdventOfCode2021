@@ -43,20 +43,16 @@ def findBaisin(board: Board)(lowest: Point): Set[Point] = {
   expand(Set(lowest), Set())
 }
 
-@main def main(filePath: String, part: Int) = {
-  println(s"Day 9 (Smoke Basin) part $part using file '$filePath'")
+@main def main(filePath: String) = {
+  println(s"Day 9 (Smoke Basin) using file '$filePath'")
   val textLines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toList
-
-  // 48 is offset to ASCII '0'
-  val board = Board(textLines.map(_.toArray.map(c => (c - 48).toInt)).toArray)
+  val board = Board(textLines.map(_.toArray.map(_.asDigit)).toArray)
   val lowestPoints = board.size.allPointsWithin.filter(isLowest(board))
 
-  if part == 2 then
-    val allBasins = lowestPoints.map(findBaisin(board))
-    val top3BasinSizes = allBasins.map(_.size).sorted.reverse.take(3)
-    println(top3BasinSizes.product)
-  else
-    val riskLevelSum = lowestPoints.map(p => board.value(p) + 1).sum
-    println(riskLevelSum)
-  end if
+  val riskLevelSum = lowestPoints.map(p => board.value(p) + 1).sum
+  println("part 1: " + riskLevelSum)
+
+  val allBasins = lowestPoints.map(findBaisin(board))
+  val top3BasinSizes = allBasins.map(_.size).sorted.reverse.take(3)
+  println("part 2: " + top3BasinSizes.product)
 }

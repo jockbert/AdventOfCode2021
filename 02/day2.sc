@@ -1,28 +1,27 @@
-case class Instruction(dir: String, length: Int)
+case class Instr(dir: String, length: Int)
 
 case class Pos(horizontal: Int = 0, vertical: Int = 0, aim: Int = 0) {
-  def add1(instr: Instruction): Pos = {
-    case Instruction("forward", len) => copy(horizontal = horizontal + len)
-    case Instruction("down", len)    => copy(vertical = vertical + len)
-    case Instruction("up", len)      => copy(vertical = vertical - len)
+
+  def add1(instr: Instr): Pos = instr match {
+    case Instr("forward", len) => copy(horizontal = horizontal + len)
+    case Instr("down", len)    => copy(vertical = vertical + len)
+    case Instr("up", len)      => copy(vertical = vertical - len)
   }
 
-  def add2(instr: Instruction): Pos = {
-    case Instruction("forward", len) =>
+  def add2(instr: Instr): Pos = instr match {
+    case Instr("forward", len) =>
       copy(horizontal = horizontal + len, vertical = vertical + len * aim)
-    case Instruction("down", len) => copy(aim = aim + len)
-    case Instrction("up", len)    => copy(aim = aim - len)
+    case Instr("down", len) => copy(aim = aim + len)
+    case Instr("up", len)   => copy(aim = aim - len)
   }
+
+  def product = horizontal * vertical
 }
 
-@main def main(filePath: String, part: Int) =
-  println(s"Day 2 (Dive!) part $part using file '${filePath}'")
+@main def main(filePath: String) =
+  println(s"Day 2 (Dive!) using file '${filePath}'")
   val lines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toList
+  val instrs = lines.map(_.split(" ")).map(arr => Instr(arr(0), arr(1).toInt))
 
-  val instructions =
-    lines.map(_.split(" ")).map(arr => Instruction(arr(0), arr(1).toInt))
-
-  val finalPos = instructions
-    .foldLeft(Pos())((pos, i) => if part == 2 then pos.add2(i) else pos.add1(i))
-
-  println(finalPos.horizontal * finalPos.vertical)
+  println("part 1: " + instrs.foldLeft(Pos())((pos, i) => pos.add1(i)).product)
+  println("part 2: " + instrs.foldLeft(Pos())((pos, i) => pos.add2(i)).product)

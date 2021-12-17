@@ -45,8 +45,9 @@ def countFlashes(ds: Dumbos, steps: Int) =
 def findSyncStep(ds: Dumbos) =
   LazyList.from(1).dropWhile(_ => ds.step() != ds.size.area).head
 
-@main def main(filePath: String, part: Int) =
-  println(s"Day 11 (Dumbo Octopus) part $part using file '$filePath'")
+@main def main(filePath: String) =
+  println(s"Day 11 (Dumbo Octopus) using file '$filePath'")
   val textLines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toArray
   val ds = Dumbos(textLines.map(_.map(_.asDigit).toArray))
-  println(if (part == 2) findSyncStep(ds) else countFlashes(ds, 100))
+  println("part 1: " + countFlashes(ds, 100))
+  println("part 2: " + findSyncStep(ds))

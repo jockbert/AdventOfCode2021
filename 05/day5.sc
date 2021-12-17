@@ -38,15 +38,19 @@ def parseLine(in: String): Line = in
   case _ => throw RuntimeException(s"Unable to pars line given '$in'.")
 }
 
-@main def main(filePath: String, part: Int) = {
-  println(s"Day 5 (Hydrothermal Venture) part $part using file '$filePath'")
-  val textLines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toList
-
+def doPart(part: Int, textLines: List[String]) = {
   val allLines = textLines
     .map(parseLine)
     .filter(l => l.isVerticalOrHorizontal || (part == 2 && l.isDiagonal))
 
   val allPoints = allLines.flatMap(_.allPointsOnLine)
   val uniqueMultioccurencePoints = allPoints.diff(allPoints.distinct).distinct
-  println(uniqueMultioccurencePoints.size)
+  println(s"part $part: " + uniqueMultioccurencePoints.size)
+}
+
+@main def main(filePath: String) = {
+  println(s"Day 5 (Hydrothermal Venture) using file '$filePath'")
+  val textLines = scala.io.Source.fromFile(filePath, "UTF-8").getLines.toList
+  doPart(1, textLines)
+  doPart(2, textLines)
 }
