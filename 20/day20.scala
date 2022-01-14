@@ -37,7 +37,7 @@ case class Image(
     def isLitUpWhenEnhanced(p: Point): Boolean = lookup(index(p))
     def allPointsInNewImage = allPointsBetween(newMin, newMax)
 
-    val isNewInfinityLit = lookup(if isInfinityLit then 255 else 0)
+    val isNewInfinityLit = lookup(if isInfinityLit then 511 else 0)
 
     Image(
       allPointsInNewImage.filter(isLitUpWhenEnhanced).toSet,
